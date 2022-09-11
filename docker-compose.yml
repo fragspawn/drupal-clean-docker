@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  db:
+    image: mariadb:10.10-rc 
+    container_name: drupal-persist
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB} 
+      MYSQL_USER: ${DBU} 
+      MYSQL_PASSWORD: ${DBP} 
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d/
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: drupal-phpmyadmin
+    environment:
+      PMA_HOST: ${DBH}
+      PMA_USER: ${DBU} 
+      PMA_PASSWORD: ${DBP} 
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8889:80
+  drupal:
+    image: drupal:9-apache-buster 
+    container_name: drupal-www
+    depends_on:
+      - db
+    ports:
+      - 8888:80
+    restart: always
+    environment:
+      DB_DB: ${DB}
+      DB_HOST: ${DBH}
+      DB_USER: ${DBU}
+      DB_PASSWORD: ${DBP}
+      ADMIN_PASSWORD: ${DP}
+      TRUSTED_HOST: ${DH}
+    volumes:
+      - .:/opt:z
+    working_dir: /opt
+    command: bash -c "
+        composer update --no-scripts &&
+        rm /var/www/html &&
+        ln -s /opt/web /var/www/html &&
+        chmod -R 777 /opt/web/sites/default/files &&
+        ./drush updb --cache-clear &&
+        ./drush upwd admin $$ADMIN_PASSWORD &&
+        /usr/local/bin/apache2-foreground
+      "
+
