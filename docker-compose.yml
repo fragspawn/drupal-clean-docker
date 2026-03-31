@@ -1,7 +1,10 @@
 name: drupal9
 services:
   db:
-    image: mariadb:10.10-rc 
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    image: drupal-db:10.10
     container_name: drupal-persist
     restart: always
     environment:
@@ -9,8 +12,6 @@ services:
       MYSQL_USER: ${DBU} 
       MYSQL_PASSWORD: ${DBP} 
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
-    volumes:
-      - sql:/docker-entrypoint-initdb.d/
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: drupal-phpmyadmin
@@ -23,7 +24,10 @@ services:
     ports:
       - 8889:80
   drupal:
-    image: drupal:9-apache-buster 
+    build:
+      context: .
+      dockerfile: Dockerfile.drupal
+    image: drupal-app:9
     container_name: drupal-www
     depends_on:
       - db
@@ -37,8 +41,6 @@ services:
       DB_PASSWORD: ${DBP}
       ADMIN_PASSWORD: ${DP}
       TRUSTED_HOST: ${DH}
-    volumes:
-      - .:/opt:z
     working_dir: /opt
     command: bash -c "
         composer update --no-interaction &&
@@ -49,5 +51,3 @@ services:
         ./drush upwd admin $$ADMIN_PASSWORD &&
         /usr/local/bin/apache2-foreground
       "
-volumes:
-  sql:
