@@ -1,5 +1,4 @@
 FROM drupal:9-apache-buster
 
-# Bake the project into the image so no bind mount is required.
 COPY . /opt
 RUN rm -f /opt/docker-compose.yml
