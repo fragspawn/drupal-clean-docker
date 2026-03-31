@@ -11,7 +11,7 @@ services:
       MYSQL_PASSWORD: ${DBP} 
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
-      - ./sql:/docker-entrypoint-initdb.d/
+      - sql:/docker-entrypoint-initdb.d/
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: drupal-phpmyadmin
