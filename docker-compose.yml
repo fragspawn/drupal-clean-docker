@@ -21,6 +21,8 @@ services:
       PMA_PASSWORD: ${DBP} 
       PMA_ARBITRARY: 1
     restart: always
+    depends_on:
+      - db
     ports:
       - 8889:80
   drupal:
