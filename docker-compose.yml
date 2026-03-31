@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    image: drupal-db:10.10
     container_name: drupal-persist
     restart: always
     environment:
@@ -13,7 +12,7 @@ services:
       MYSQL_PASSWORD: ${DBP} 
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     container_name: drupal-phpmyadmin
     environment:
       PMA_HOST: ${DBH}
@@ -29,7 +28,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.drupal
-    image: drupal-app:9
     container_name: drupal-www
     depends_on:
       - db
