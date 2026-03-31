@@ -3,6 +3,10 @@ services:
   db:
     build:
       context: .
+      args:
+        MYSQL_DATABASE: ${DB}
+        MYSQL_USER: ${DBU}
+        MYSQL_PASSWORD: ${DBP}
       dockerfile: Dockerfile.db
     container_name: drupal-persist
     restart: always
@@ -10,7 +14,7 @@ services:
       MYSQL_DATABASE: ${DB} 
       MYSQL_USER: ${DBU} 
       MYSQL_PASSWORD: ${DBP} 
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_ROOT_PASSWORD: ${DBP}
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: drupal-phpmyadmin
