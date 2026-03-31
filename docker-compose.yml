@@ -48,4 +48,5 @@ services:
         ./drush upwd admin $$ADMIN_PASSWORD &&
         /usr/local/bin/apache2-foreground
       "
-
+volumes:
+  sql:
