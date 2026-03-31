@@ -1,3 +1,4 @@
+name: drupal9
 services:
   db:
     image: mariadb:10.10-rc 
